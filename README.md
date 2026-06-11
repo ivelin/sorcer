@@ -10,24 +10,24 @@ Agentic startups need a trustworthy source of truth for their operations — peo
 
 Most CRMs are built for human teams with heavy UIs and complex processes. Raw database tools are too low-level for agents to treat as a proper system of record.
 
-sorcer fills the gap: a simple, agent-native backend that non-technical founders can run with almost zero setup. Frontier AI models interact with it directly via MCP; the AI layer renders the experience (HTML, voice, video, etc.) when needed.
+sorcer fills the gap: a simple, headless backend that non-technical founders can run with almost zero setup. Their favorite agent harness (Grok Build, Claude, OpenClaw, Gemini, etc.) or chat app then connects to sorcer via MCP (or skills that use MCP/CLI under the hood). The polished agentic UX lives in the chat or harness — sorcer just provides reliable data and capabilities.
 
 ## Fundamental beliefs
 
-- **Agents are primary users.** The system is designed first for AI agents operating through clean, high-signal tools. Humans (founders and operators) use a simple CLI. Traditional employee dashboards are not required.
+- **Agents are primary users.** Non-technical founders interact with sorcer through polished agentic interfaces (Claude, Grok, Gemini, OpenClaw, Grok Build, etc.). These agents connect to sorcer using MCP (primary) or skills. The CLI exists mainly for initial setup, local ops, and as a building block for skills.
 
 - **Start simple, grow without friction.** Zero-config SQLite gets you running immediately. The same interface and tools continue to work as you upgrade the storage layer to DuckDB or PostgreSQL.
 
 - **Headless by design.** sorcer is the data foundation, not the application. It exposes data and capabilities; the calling AI decides how to present them.
 
-- **Minimal and self-contained.** A single package with minimal dependencies. A non-technical founder should be able to install it and point their AI at it in minutes.
+- **Minimal and self-contained.** A single package with minimal dependencies. A non-technical founder (or their agent) should be able to install and configure sorcer in minutes so their AI tools can start using it immediately.
 
 - **Permissive and portable.** Apache 2.0 license. Data and schema should remain easy to inspect, export, and move.
 
 ## Goals
 
 - Deliver a dead-simple, self-contained package (`pip install sorcer` or `uvx sorcer`)
-- Provide high-quality MCP tools and an approachable CLI so agents and founders can create, search, relate, and audit records
+- Provide high-quality MCP tools (primary interface for agents) and a practical CLI (for setup, skills, and ops) so agents can create, search, relate, and audit records on behalf of founders
 - Support the core records most startups need (people, organizations, activities, flexible properties, and relations) plus a complete audit trail
 - Offer a clear upgrade path to more powerful databases with no changes required to agents or tools
 - Stay small and focused so it can be the reliable foundation rather than another complex platform
@@ -46,12 +46,12 @@ It is the lightweight, trustworthy System of Record that agentic teams and their
 flowchart TD
     subgraph Users
         Founder[Non-technical Founder]
-        Agent[AI Agent<br/>via MCP]
+        Agent[AI Agent / Harness<br/>(Claude, Grok, OpenClaw, etc.)]
     end
 
-    subgraph "sorcer (headless)"
-        CLI[CLI<br/>Typer + Rich]
-        MCP[MCP Server<br/>FastMCP]
+    subgraph "sorcer (headless backend)"
+        MCP[MCP Server<br/>FastMCP (primary)]
+        CLI[CLI<br/>(setup + skills)]
         Core[Core<br/>Tools + Repositories + Audit]
     end
 
@@ -61,10 +61,11 @@ flowchart TD
         Postgres[(PostgreSQL)]
     end
 
-    Founder -->|CLI| CLI
+    Founder --> Agent
     Agent -->|MCP| MCP
-    CLI --> Core
+    Agent -.->|Skill wrapping CLI| CLI
     MCP --> Core
+    CLI --> Core
     Core --> SQLite
     Core --> DuckDB
     Core --> Postgres
