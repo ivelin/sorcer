@@ -45,20 +45,20 @@ It is the lightweight, trustworthy System of Record that agentic teams and their
 ```mermaid
 flowchart TD
     subgraph Users
-        Founder[Non-technical Founder]
-        Agent[AI Agent / Harness<br/>(Claude, Grok, OpenClaw, etc.)]
+        Founder["Non-technical Founder"]
+        Agent["AI Agent / Harness\n(Claude, Grok, OpenClaw, etc.)"]
     end
 
     subgraph "sorcer (headless backend)"
-        MCP[MCP Server<br/>FastMCP (primary)]
-        CLI[CLI<br/>(setup + skills)]
-        Core[Core<br/>Tools + Repositories + Audit]
+        MCP["MCP Server\nFastMCP (primary)"]
+        CLI["CLI\n(setup + skills)"]
+        Core["Core\nTools + Repositories + Audit"]
     end
 
     subgraph Storage
-        SQLite[(SQLite<br/>default)]
-        DuckDB[(DuckDB)]
-        Postgres[(PostgreSQL)]
+        SQLite[("SQLite\ndefault")]
+        DuckDB[("DuckDB")]
+        Postgres[("PostgreSQL")]
     end
 
     Founder --> Agent
@@ -69,7 +69,7 @@ flowchart TD
     Core --> SQLite
     Core --> DuckDB
     Core --> Postgres
-    Core --> Timeline[Timeline + Full Audit Log]
+    Core --> Timeline["Timeline + Full Audit Log"]
 ```
 
 sorcer exposes a clean interface layer (CLI + MCP) over a pluggable storage abstraction. The same high-level tools work regardless of the backend database.
